@@ -15,8 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('main');
-})->name('home');
+})->name('welcome');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::match(array('GET', 'POST'), '/users', 'UserController@index');
+Route::resource('/users', 'UserController', ['except' => ['create', 'store']]);

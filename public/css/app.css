@@ -10928,3 +10928,7 @@ a.text-dark:focus {
   }
 }
 
+.pagination {
+  justify-content: center;
+}
+
