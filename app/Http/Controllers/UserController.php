@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
@@ -80,5 +82,35 @@ class UserController extends Controller
         else:
             return redirect()->route('users.show', ['user' => $user]);
         endif;
+    }
+
+    public function update(User $user, Request $request) {
+        request()->validate([
+            'password' => 'confirmed',
+        ]);
+
+        if ($request->get('name') != ""):
+            $user->name = $request->get('name');
+        endif;
+        if($request->get('email') != ""):
+            $user->email = $request->get('email');
+        endif;
+        if($request->get('password') != ""):
+            $user->password = Hash::make($request->get('password'));
+        endif;
+        if(Auth::user()->isAdmin):
+            if ($request->get('isActive') != null):
+                $user->isActive = true;
+            else:
+                $user->isActive = false;
+            endif;
+            if ($request->get('isAdmin') != null):
+                $user->isAdmin = true;
+            else:
+                $user->isAdmin = false;
+            endif;
+        endif;
+        $user->save();
+        return redirect()->route('users.show', ['user' => $user]);
     }
 }

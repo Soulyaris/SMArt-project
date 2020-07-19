@@ -24,4 +24,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::match(array('GET', 'POST'), '/users', 'UserController@index');
 Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
 Route::get('/users/{user}/delete-confirmed', 'UserController@deleteConfirmed')->name('users.delete.confirmed');
+Route::post('/users/{user}/update', 'UserController@update')->name('users.update');
 Route::resource('/users', 'UserController', ['except' => ['create', 'store', 'destroy', 'update']]);
