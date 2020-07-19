@@ -22,8 +22,11 @@
                 <div class="card-body">
                     <div class="row row-cols-1 row-cols-md-3">
                         @foreach ($users as $user)
-                            <div class="col mb-4">
-                                <div class="card">
+                            @if ($user->isActive == false && !(Auth::user()->isAdmin))
+                                @continue
+                            @endif
+                            <div class="col mb-4">                                
+                                <div class="card @if ($user->isActive == false && Auth::user()->isAdmin) bg-warning @endif ">
                                     <img src="..." class="card-img-top" alt="...">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $user->name }}</h5>
@@ -35,10 +38,10 @@
                                             <a href="{{ route('users.edit', $user->id) }}" type="button" class="btn btn-primary">Update</a>
                                         @endif
                                         @if (Auth::user()->isAdmin)
-                                            <a href="{{ route('users.destroy', $user->id) }}" type="button" class="btn btn-danger">Delete</a>
+                                            <a href="{{ route('users.delete', $user->id) }}" type="button" class="btn btn-danger">Delete</a>
                                         @endif
                                     </div>
-                                </div>
+                                </div>                                
                             </div>
                         @endforeach
                     </div>

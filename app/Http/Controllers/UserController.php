@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -28,9 +30,6 @@ class UserController extends Controller
             $users = User::paginate(15);
         endif;
         return view('users.index', ['users' => $users]);
-        /*$users = DB::table('users')->paginate(15);
-
-        return view('user.index', ['users' => $users]);*/
     }
 
     /**
@@ -52,19 +51,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('users.edit', ['user' => $user]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+        if (Gate::allows('update-user', $user)):
+            return view('users.edit', ['user' => $user]);
+        else:
+            return redirect()->route('users.show', ['user' => $user]);
+        endif;
     }
 
     /**
@@ -73,8 +64,21 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
-    {
-        //
+
+    public function deleteConfirmed(User $user) {
+        if (Gate::allows('delete-user', $user)):
+            $user->update(array('isActive' => false));
+            return redirect()->route('users.index');
+        else:
+            return redirect()->route('users.show', ['user' => $user]);
+        endif;
+    }
+
+    public function delete(User $user) {
+        if (Gate::allows('delete-user', $user)):
+            return view('users.delete', ['user' => $user]);
+        else:
+            return redirect()->route('users.show', ['user' => $user]);
+        endif;
     }
 }
