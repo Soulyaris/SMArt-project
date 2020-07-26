@@ -25,11 +25,11 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $userInfo = $this->user;
-        return view('users.test',['output' => $this]);
         return [
             'name' => 'nullable|unique:users,name,'.$userInfo.'|min:3|max:60',
-            'email' => 'nullable|email|unique,email'.$userInfo,
-            'password' => 'nullable|confirmed|min:6|max:32'
+            'email' => 'nullable|email|unique:users,email,'.$userInfo,
+            'password' => 'nullable|confirmed|min:6|max:32',
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 }

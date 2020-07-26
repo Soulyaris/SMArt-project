@@ -9,6 +9,18 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('users.index') }}">Users</a>
             </li>
+            @if (Auth::user())
+                @if (Auth::user()->isAdmin)
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>Admin panel<span class="caret"></span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('admin.categories.index') }}">Manage categories</a>
+                        </div>
+                    </li>
+                @endif
+            @endif
             </ul>
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->

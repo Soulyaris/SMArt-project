@@ -14,7 +14,14 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
+    }
+
+    private function avatar_store($userId, $link) {
+        $path = $link->store('public/avatars/'.$userId);
+        $path = str_replace('public/', 'storage/', $path);
+
+        return $path;
     }
 
     /**
@@ -84,21 +91,26 @@ class UserController extends Controller
         endif;
     }
 
-    public function update(User $user, Request $request) {
-        request()->validate([
-            'password' => 'confirmed',
-        ]);
+    public function update(UserRequest $request) {
 
+        $id = request()->route('user');
+        $user = User::find($id);
+        //return view('users.test', ['output' => $request->file('avatar')]);
         if ($request->get('name') != ""):
             $user->name = $request->get('name');
         endif;
-        if($request->get('email') != ""):
+        if ($request->get('email') != ""):
             $user->email = $request->get('email');
         endif;
-        if($request->get('password') != ""):
+        if ($request->get('password') != ""):
             $user->password = Hash::make($request->get('password'));
         endif;
-        if(Auth::user()->isAdmin):
+
+        if ($request->file('avatar')):
+            $link = $request->file('avatar');
+            $user->avatar = $this->avatar_store($id, $link);
+        endif;
+        if (Auth::user()->isAdmin):
             if ($request->get('isActive') != null):
                 $user->isActive = true;
             else:
