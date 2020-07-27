@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoryModel;
+use App\Models\CategoryModel as Category;
+use App\Models\ImageModel as Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -12,46 +13,29 @@ class CategoryModelController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth');
-        if (Gate::allows('admin-user', Auth::user())):
-            return true;
-        else:
-            return redirect()->route('home');
-        endif;
-    }
-
-    public function checkPrivilegies() {
-        if (Gate::allows('admin-user', Auth::user())):
-            return true;
-        else:
-            return false;
-        endif;
+        $this->middleware('admin');
     }
 
     public function index() {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
 
-        $categoriesList = DB::table('categories')->orderBy('name','asc')->get();
-        return view('auth.admin.categories.index', ['categories' => $categoriesList]);
+        $categoriesList = Category::orderBy('name','asc')->get();
+        $categoriesQantity = [];
+        foreach ($categoriesList as $category):
+            $quantity = Image::where('category', '=', $category->id)->count();
+            $categoriesQantity[$category->id] = $quantity;
+        endforeach;
+        return view('auth.admin.categories.index', ['categories' => $categoriesList, 'quantity' => $categoriesQantity]);
     }
 
-    public function edit(CategoryModel $category) {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
+    public function edit(Category $category) {
 
         return view('auth.admin.categories.edit', ['category' => $category]);
     }
 
     public function update(Request $request) {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
 
         $id = request()->route('category');
-        $category = CategoryModel::find($id);
+        $category = Category::find($id);
         $validatedData = $request->validate([
             'name' => 'required|unique:categories,name,'.$id.'|min:2|max:30',
         ]);
@@ -68,41 +52,29 @@ class CategoryModelController extends Controller
         return redirect()->route('admin.categories.index');
     }
 
-    public function delete(CategoryModel $category) {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
+    public function delete(Category $category) {
 
         return view('auth.admin.categories.delete', ['category' => $category]);
     }
 
-    public function deleteConfirmed(CategoryModel $category) {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
+    public function deleteConfirmed(Category $category) {
 
         $category->update(array('isActive' => false));
         return redirect()->route('admin.categories.index');
     }
 
     public function add() {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
 
         return view('auth.admin.categories.add');
     }
 
     public function create(Request $request) {
-        if (!($this->checkPrivilegies())):
-            return redirect()->route('home');
-        endif;
 
         $validatedData = $request->validate([
             'name' => 'required|unique:categories,name|min:2|max:30',
         ]);
 
-        $category = new CategoryModel;
+        $category = new Category;
         $category->name = $request->get('name');
         $category->save();
 

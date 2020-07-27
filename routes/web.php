@@ -27,7 +27,7 @@ Route::get('/users/{user}/delete-confirmed', 'UserController@deleteConfirmed')->
 Route::post('/users/{user}/update', 'UserController@update')->name('users.update');
 Route::resource('/users', 'UserController', ['except' => ['create', 'store', 'destroy', 'update']]);
 
-Route::prefix('admin')->name('admin.')->group(function(){
+Route::prefix('admin')->name('admin.')->middleware('admin')->group(function(){
     Route::prefix('categories')->name('categories.')->group(function(){
         Route::get('/', 'CategoryModelController@index')->name('index');
         Route::get('/add', 'CategoryModelController@add')->name('add');
@@ -37,4 +37,10 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::get('/{category}/delete', 'CategoryModelController@delete')->name('delete');
         Route::get('/{category}/delete-confirmed', 'CategoryModelController@deleteConfirmed')->name('delete.confirmed');
     });
+});
+
+Route::prefix('image')->name('image.')->middleware('auth')->group(function(){
+    Route::get('/{user}/show/{image}','ImageModelController@show')->withoutMiddleware('auth')->name('show');
+    Route::get('/add', 'ImageModelController@add')->name('add');
+    Route::post('/create', 'ImageModelController@create')->name('create');
 });

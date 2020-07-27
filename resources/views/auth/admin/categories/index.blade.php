@@ -10,7 +10,7 @@
         <div class="col-xl">
             <div class="card">
                 <div class="card-header">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <nav class="navbar navbar-expand-rg navbar-light bg-light">
                         <h3>Categories</h3>
                         <a href="{{ route('admin.categories.add') }}" class="btn btn-success"><b>+</b> Add</a>
                     </nav>
@@ -27,7 +27,7 @@
 
                                     <h5 class="card-header">{{ $category->name }}</h5>
                                     <div class="card-body">
-                                      <h5 class="card-title">Number of assigned images</h5>
+                                      <h5 class="card-title">Number of assigned images: {{ $quantity[$category->id] }}</h5>
                                       <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-primary">Update</a>
                                       <a href="{{ route('admin.categories.delete', $category->id) }}" class="btn btn-danger">Delete</a>
                                     </div>
