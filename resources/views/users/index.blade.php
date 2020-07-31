@@ -10,7 +10,7 @@
         <div class="col-xl">
             <div class="card">
                 <div class="card-header"><h3>Users</h3></div>
-                    <form class="form-inline mt-2 mt-md-0" method="POST" action="{{ route('users.index') }}">
+                    <form class="form-inline mt-2 mt-md-0 card-body pt-0 pb-0" method="POST" action="{{ route('users.index') }}">
                     <div class="input-group w-100 mb-3">
                         @csrf
                         <input type="text" class="form-control" placeholder="Username" name="username" id="username" aria-label="Username" aria-describedby="basic-addon2">

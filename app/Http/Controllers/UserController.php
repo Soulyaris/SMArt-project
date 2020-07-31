@@ -34,10 +34,10 @@ class UserController extends Controller
     {
         if ($request->isMethod('post') && $request->username != ""):
             $username = $request->username;
-            $users = User::where('name', 'like', '%'.$username.'%')->paginate(15);
+            $users = User::where('name', 'ILIKE', '%'.$username.'%')->orderBy('name', 'asc')->paginate(15);
             //return view('users.test', ['output' => $request->username]);
         else:
-            $users = User::paginate(15);
+            $users = User::orderBy('name', 'asc')->paginate(15);
         endif;
         return view('users.index', ['users' => $users]);
     }
@@ -48,7 +48,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(User $user, Request $request)
     {
         if (Auth::user() && Auth::user()->isAdmin):
             $images = DB::table('images')->where('user', '=', $user->id)->orderBy('id', 'asc')->paginate(15);

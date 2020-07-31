@@ -18,17 +18,19 @@
               <h6 class="mb-0 text-white lh-100">{{ $user->name }}</h6>
             </div>
         </div>
-        <div class="my-3 p-3 bg-white rounded shadow-sm">
-            <h5 class="border-bottom border-gray pb-2 mb-2">Images</h5>
-            <div class="row text-center text-lg-left">
-                @foreach ($images as $image)
-                    <div class="col-lg-3 col-md-4 col-sm-4">
-                        <a href="{{ route('image.show', ['user' => $image->user, 'image' => $image->id]) }}" class="d-block mb-4 img-thumbnail @if (!($image->isActive)) bg-dark @endif">
-                            <div class="gallery-img-name rounded-top">{{ $image->name }}</div>
-                            <img class="img-fluid image-resposive-height" src="{{ '/'.$image->link }}" alt="">
-                        </a>
-                    </div>
-                @endforeach
+        <div class="card">
+            <h5 class="card-header mb-3">Images</h5>
+            <div id="image-gallery">
+                <div class="grid-container">
+                    @foreach ($images as $image)
+                        <div>
+                            <a href="{{ route('image.show', [$image->user, $image->id]) }}">
+                                <img class='grid-item grid-item-{{ $loop->index + 1 }}' src='{{ '/'.$image->link }}' alt=''>
+                                <p>{{ $image->name }}</p>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
             </div>
             {{ $images->links() }}
         </div>

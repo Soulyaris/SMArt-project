@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('main');
-})->name('welcome');
+Route::match(array('GET', 'POST'),'/', 'GalleryController@index')->name('gallery');
 
 Auth::routes();
 
