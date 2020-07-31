@@ -22,7 +22,7 @@ class CreateCommentModelsTable extends Migration
             $table->unsignedBigInteger('reply_to')->nullable();
             $table->foreign('reply_to')->references('id')->on('comments');
             $table->string('comment_text');
-            $table->boolean('isActive');
+            $table->boolean('isActive')->default(true);
             $table->timestamps();
         });
     }

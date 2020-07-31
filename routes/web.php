@@ -49,3 +49,11 @@ Route::prefix('image')->name('image.')->middleware('auth')->group(function(){
     Route::get('/{user}/delete-confirmed/{image}','ImageModelController@deleteConfirmed')->name('delete.confirmed');
     Route::post('/{image}/rate', 'RatingModelController@rate')->name('rate');
 });
+
+Route::prefix('comment')->name('comment.')->middleware('auth')->group(function(){
+    Route::post('/{image}/create', 'CommentModelController@create')->name('create');
+    Route::get('/{comment}/edit','CommentModelController@edit')->name('edit');
+    Route::post('/{comment}/update','CommentModelController@update')->name('update');
+    Route::get('/{comment}/delete','CommentModelController@delete')->name('delete');
+    Route::get('/{comment}/delete-confirmed','CommentModelController@deleteConfirmed')->name('delete.confirmed');
+});

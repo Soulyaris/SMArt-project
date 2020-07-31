@@ -51,13 +51,50 @@
     </div>
     <div class="card">
         <div class="card-header">
-          Featured
+          Comments
         </div>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
+        @if (Auth::user())
+            <form class="card-body border-bottom" id="comment-form" action="{{ route('comment.create', $image->id) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="comment-field">{{ __('Paste your comment here:') }}</label>
+
+                    <div>
+                        <textarea class="form-control @error('comment') is-invalid @enderror" id="comment-field" name="comment" rows="4" required></textarea>
+
+                        @error('comment')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-success">
+                            {{ __('Submit') }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        @endif
+        @foreach ($comments as $comment)
+            <div class="card-body border-bottom{{ $comment->isActive ? "" : " bg-dark" }}">
+                <div class="list-group">
+                    <h5 class="list-group-item active bg-secondary"><a class="text-light" href={{ route("users.show", $comment->userid) }}>{{ $comment->username}}</a></h5>
+                    <p class="list-group-item" data-comment-id="{{ $comment->id }}">{{ $comment->comment_text}}</p>
+                    @if (Auth::user() && (Auth::user()->id === $comment->userid || Auth::user()->isAdmin))
+                        <div class="image-control">
+                            <a class="image-control-edit" href="{{ route('comment.edit', [$comment->id]) }}"></a>
+                            <a class="image-control-delete" href="{{ route('comment.delete', [$comment->id]) }}"></a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+
+        {{ $comments->links() }}
     </div>
 </div>
 <script src="{{ asset('js/jquery.slim.min.js') }}"></script>

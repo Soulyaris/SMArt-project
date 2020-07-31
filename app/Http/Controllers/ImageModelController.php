@@ -6,6 +6,7 @@ use App\Http\Requests\ImageRequest;
 use Illuminate\Http\Request;
 use App\Models\ImageModel as Image;
 use App\Models\RatingModel as Rating;
+use App\Models\CommentModel as Comment;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,12 +25,17 @@ class ImageModelController extends Controller
         if ($image->isActive || (Auth::user() && Auth::user()->isAdmin)):
             ($image->views) ? $image->views++ : $image->views = 1;
             $image->save();
+            if (Auth::user() && Auth::user()->isAdmin):
+                $comments = Comment::leftjoin(DB::raw('(SELECT "id" AS "userid", "name" AS "username" FROM "users") AS "user"'), 'comments.user', '=', 'user.userid')->where('image', $image->id)->orderBy('comments.id', 'asc')->paginate(50);
+            else:
+                $comments = Comment::leftjoin(DB::raw('(SELECT "id" AS "userid", "name" AS "username" FROM "users") AS "user"'), 'comments.user', '=', 'user.userid')->where('image', $image->id)->where('isActive', true)->orderBy('comments.id', 'asc')->paginate(50);
+            endif;
             $rated = 'cannot-rate';
             if (Auth::user()):
                 $rating = Rating::where('image', $image->id)->where('user', Auth::user()->id)->get();
                 $rated = $rating->isEmpty() ? 'not-rated' : $rating[0]->rating;
             endif;
-            return view('images.show', ['user' => $user, 'image' => $image, 'rated' => $rated, 'rating' => ['rating' => $image->rating, 'rating-count' => $image->rating_count]]);
+            return view('images.show', ['user' => $user, 'image' => $image, 'rated' => $rated, 'rating' => ['rating' => $image->rating, 'rating-count' => $image->rating_count], 'comments' => $comments]);
         else:
             return redirect()->route('users.show', $user->id);
         endif;

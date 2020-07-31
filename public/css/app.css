@@ -10944,6 +10944,7 @@ a.text-dark:focus {
   position: absolute;
   right: 10px;
   top: 10px;
+  z-index: 2;
 }
 
 .image-control .image-control-edit::before {
@@ -11013,5 +11014,13 @@ a.text-dark:focus {
     display: block;
     margin: auto;
   }
+}
+
+.card-body .list-group {
+  position: relative;
+}
+
+.card-body .list-group .list-group-item {
+  margin-bottom: 0px;
 }
 
