@@ -57,3 +57,5 @@ Route::prefix('comment')->name('comment.')->middleware('auth')->group(function()
     Route::get('/{comment}/delete','CommentModelController@delete')->name('delete');
     Route::get('/{comment}/delete-confirmed','CommentModelController@deleteConfirmed')->name('delete.confirmed');
 });
+
+Route::get('/tops', 'TopsController@index')->name('tops');

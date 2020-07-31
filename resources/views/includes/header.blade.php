@@ -9,6 +9,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('users.index') }}">Users</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('tops') }}">Tops</a>
+            </li>
             @if (Auth::user())
                 <a class="nav-link" href="{{ route('image.add') }}">Add image</a>
             @endif

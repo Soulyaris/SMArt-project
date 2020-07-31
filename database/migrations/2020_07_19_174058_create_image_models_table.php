@@ -21,9 +21,9 @@ class CreateImageModelsTable extends Migration
             $table->foreign('user')->references('id')->on('users');
             $table->unsignedBigInteger('category');
             $table->foreign('category')->references('id')->on('categories');
-            $table->bigInteger('rating')->nullable();
-            $table->bigInteger('rating_count')->nullable();
-            $table->bigInteger('views')->nullable();
+            $table->bigInteger('rating')->default(0);
+            $table->bigInteger('rating_count')->default(0);
+            $table->bigInteger('views')->default(0);
             $table->boolean('isActive')->default(true);
             $table->timestamps();
         });
