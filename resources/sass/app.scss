@@ -10,3 +10,89 @@
 .pagination {
     justify-content: center;
 }
+
+.fit-height {
+    max-height: 70vh;
+    object-fit: contain;
+    margin-bottom: 25px;
+}
+
+.image-control {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+
+    .image-control-edit {
+        &::before {
+            content: "";
+            background-image: url('/images/pencil.png');
+            background-size: 20px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .image-control-delete {
+        &::before {
+            content: "";
+            background-image: url('/images/eraser.png');
+            background-size: 20px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+.gallery-img-name {
+    background-color: rgba(255,255,255,0.9);
+    width: 100%;
+    font-weight: bold;
+}
+
+.zero-bottom-padding {
+    padding-bottom: 0px;
+}
+
+.image-rating-form {
+    .rating-star {
+        display: none;
+    }
+    label {
+        background-image: url(/images/star.png);
+        background-size: 20px;
+        width: 20px;
+        height: 20px;
+        margin-right: -2px;
+        cursor: pointer;
+        opacity: 0.4;
+        &.active {
+            opacity: 1;
+        }
+    }
+}
+
+.rating-star-rated {
+    display: inline-block;
+    background-image: url(/images/star.png);
+    background-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: -2px;
+    cursor: pointer;
+    opacity: 0.4;
+    &.active {
+        opacity: 1;
+    }
+}
+
+@media (min-width: 576px) {
+    .image-resposive-height {
+        max-height: 20vh;
+        display: block;
+        margin: auto;
+    }
+}
+

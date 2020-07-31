@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ImageRequest;
 use Illuminate\Http\Request;
 use App\Models\ImageModel as Image;
-use App\Models\ImageModel;
+use App\Models\RatingModel as Rating;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ImageModelController extends Controller
 {
@@ -18,9 +20,19 @@ class ImageModelController extends Controller
         return $path;
     }
 
-    public function show($userId, $imageId) {
-        $image = Image::where('id', '=', $imageId)->get()[0];
-        return view('images.show', ['image' => $image]);
+    public function show(User $user, Image $image) {
+        if ($image->isActive || (Auth::user() && Auth::user()->isAdmin)):
+            ($image->views) ? $image->views++ : $image->views = 1;
+            $image->save();
+            $rated = 'cannot-rate';
+            if (Auth::user()):
+                $rating = Rating::where('image', $image->id)->where('user', Auth::user()->id)->get();
+                $rated = $rating->isEmpty() ? 'not-rated' : $rating[0]->rating;
+            endif;
+            return view('images.show', ['user' => $user, 'image' => $image, 'rated' => $rated, 'rating' => ['rating' => $image->rating, 'rating-count' => $image->rating_count]]);
+        else:
+            return redirect()->route('users.show', $user->id);
+        endif;
     }
 
     public function add() {
@@ -48,5 +60,43 @@ class ImageModelController extends Controller
         $newImage = Image::where('link', '=', $path)->get();
 
         return redirect()->route('image.show', ['user' => $userId, 'image' => $image->id]);
+    }
+
+    public function edit(User $user, Image $image) {
+        if (Gate::allows('update-user', $user)):
+            return view('images.edit', ['image' => $image]);
+        else:
+            return redirect()->route('image.show', [$user, $image]);
+        endif;
+    }
+
+    public function update(Request $request) {
+        $id = request()->route('image');
+        $image = Image::find($id);
+        $validatedData = $request->validate([
+            'name' => 'required|min:2|max:120',
+        ]);
+        $image->name = $request->get('name');
+        if ($request->get('isActive') != null):
+            $image->isActive = true;
+        else:
+            $image->isActive = false;
+        endif;
+        $image->save();
+        return redirect()->route('image.show', ['user' => $image->user, 'image' => $image->id]);
+    }
+
+    public function delete(User $user, Image $image) {
+        if (Gate::allows('delete-user', $user)):
+            return view('images.delete', ['image' => $image]);
+        else:
+            return redirect()->route('image.show', [$user, $image]);
+        endif;
+    }
+
+    public function deleteConfirmed(User $user,Image $image) {
+
+        $image->update(array('isActive' => false));
+        return redirect()->route('users.show', $image->user);
     }
 }

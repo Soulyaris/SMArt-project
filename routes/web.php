@@ -43,4 +43,9 @@ Route::prefix('image')->name('image.')->middleware('auth')->group(function(){
     Route::get('/{user}/show/{image}','ImageModelController@show')->withoutMiddleware('auth')->name('show');
     Route::get('/add', 'ImageModelController@add')->name('add');
     Route::post('/create', 'ImageModelController@create')->name('create');
+    Route::get('/{user}/edit/{image}','ImageModelController@edit')->name('edit');
+    Route::post('/{user}/update/{image}','ImageModelController@update')->name('update');
+    Route::get('/{user}/delete/{image}','ImageModelController@delete')->name('delete');
+    Route::get('/{user}/delete-confirmed/{image}','ImageModelController@deleteConfirmed')->name('delete.confirmed');
+    Route::post('/{image}/rate', 'RatingModelController@rate')->name('rate');
 });

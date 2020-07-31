@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Models\ImageModel as Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -49,7 +50,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        if (Auth::user() && Auth::user()->isAdmin):
+            $images = DB::table('images')->where('user', '=', $user->id)->orderBy('id', 'asc')->paginate(15);
+        else:
+            $images = DB::table('images')->where('user', '=', $user->id)->where('isActive', true)->orderBy('id', 'asc')->paginate(15);
+        endif;
+        return view('users.show', ['images' => $images, 'user' => $user]);
     }
 
     /**
