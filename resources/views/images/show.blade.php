@@ -39,7 +39,7 @@
                 @endif
             </div>
         </div>
-        <img src="{{ '/'.$image->link }}" class="img-fluid fit-height" alt="{{ $image->name }}">
+        <img src="{{ Storage::disk('s3')->url($image->link) }}" class="img-fluid fit-height" alt="{{ $image->name }}">
         @if (Auth::user())
             @if (Auth::user()->id == $user->id || Auth::user()->isAdmin)
                 <div class="image-control">

@@ -22,7 +22,7 @@
                     @foreach ($images as $image)
                         <div>
                             <a href="{{ route('image.show', [$image->user, $image->id]) }}">
-                                <img class='grid-item grid-item-{{ $loop->index + 1 }}' src='{{ $image->link }}' alt=''>
+                                <img class='grid-item grid-item-{{ $loop->index + 1 }}' src='{{ Storage::disk('s3')->url($image->link) }}' alt=''>
                                 <p>{{ $image->name }}</p>
                             </a>
                         </div>

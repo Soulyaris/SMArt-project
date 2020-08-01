@@ -37,8 +37,8 @@
                                 @else
                                     <div class="card h-100">
                                 @endif
-                                    @if($user->avatar != "" && file_exists($user->avatar))
-                                        <img src="{{ $user->avatar }}" class="card-img-top" alt="...">
+                                    @if($user->avatar != "" && Storage::disk('s3')->exists($user->avatar))
+                                        <img src="{{ Storage::disk('s3')->url($user->avatar) }}" class="card-img-top" alt="...">
                                     @else
                                     <img src="/images/default-avatar.jpg" class="card-img-top" alt="...">
                                     @endif

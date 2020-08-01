@@ -11,12 +11,13 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ImageModelController extends Controller
 {
-    public function store($userId, $link) {
-        $path = $link->store('public/images/'.$userId);
-        $path = str_replace('public/', 'storage/', $path);
+    public function storeImage($userId, $link) {
+        $path = $link->store('images/'.$userId, 's3');
+        Storage::disk('s3')->setVisibility($path, 'public');
 
         return $path;
     }
@@ -35,6 +36,7 @@ class ImageModelController extends Controller
                 $rating = Rating::where('image', $image->id)->where('user', Auth::user()->id)->get();
                 $rated = $rating->isEmpty() ? 'not-rated' : $rating[0]->rating;
             endif;
+            //$image->link = Storage::disk('s3')->get($image->link);
             return view('images.show', ['user' => $user, 'image' => $image, 'rated' => $rated, 'rating' => ['rating' => $image->rating, 'rating-count' => $image->rating_count], 'comments' => $comments]);
         else:
             return redirect()->route('users.show', $user->id);
@@ -54,7 +56,8 @@ class ImageModelController extends Controller
         endif;
         if ($request->file('image')):
             $link = $request->file('image');
-            $path = $this->store($userId, $link);
+            $path = $this->storeImage($userId, $link);
+            //Storage::disk('s3')->setVisibility($path, 'public');
             $image->link = $path;
         endif;
         $image->user = $userId;

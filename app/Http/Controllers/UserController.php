@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -19,8 +20,8 @@ class UserController extends Controller
     }
 
     private function avatar_store($userId, $link) {
-        $path = $link->store('public/avatars/'.$userId);
-        $path = str_replace('public/', 'storage/', $path);
+        $path = $link->store('avatars/'.$userId, 's3');
+        Storage::disk('s3')->setVisibility($path, 'public');
 
         return $path;
     }
