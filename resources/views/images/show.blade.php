@@ -13,7 +13,7 @@
     @endif
         <div class="card-body zero-bottom-padding">
           <h5 class="card-title">{{ $image->name }}</h5>
-          <p class="card-text">Made by <b><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></b></p>
+          <p class="card-text">Made by <b><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></b> in {{ $category }} <small>at {{ date_format($image->created_at, 'd.m.Y')}}</small></p>
           <div id="image-info-container">
             <p class="card-text"><small class="text-muted">Viewed {{ ($image->views) ? $image->views :'0' }} times, rated {{ ($rating['rating-count']) ? $rating['rating-count'] : '0'}} times, rating: {{ ($rating['rating']) ? $rating['rating'] : '0' }}</small>
                 @if ($rated !== 'cannot-rate')

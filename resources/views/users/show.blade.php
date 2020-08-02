@@ -6,7 +6,13 @@
 
 @section('content')
     <main role="main" class="container">
-        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-secondary rounded shadow-sm position-relative">
+        <div class="d-flex align-items-center p-3 my-3
+            @if ($user->isActive)
+                text-dark bg-light
+            @else
+                text-white bg-dark
+            @endif
+            rounded shadow-sm position-relative">
             <div class="bg-light rounded mr-3">
                 @if (Storage::disk('s3')->exists($user->avatar))
                     <img class="mr-3" src="{{ Storage::disk('s3')->url($user->avatar) }}" alt="" width="60">
@@ -15,7 +21,7 @@
                 @endif
             </div>
             <div class="lh-100">
-              <h6 class="mb-0 text-white lh-100">{{ $user->name }}</h6>
+              <h6 class="mb-0 lh-100"><big>{{ $user->name }}</big> <small>registered at {{ date_format($user->created_at, 'd.m.Y') }}</small></h6>
             </div>
             @if (Auth::user())
                 @if (Auth::user()->id == $user->id || Auth::user()->isAdmin)

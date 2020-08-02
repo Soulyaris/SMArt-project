@@ -10,8 +10,10 @@
         <div class="col-xl">
             <div class="card">
                 <div class="card-header">You want to delete category: <b>{{ $category->name }}</b>?</div>
-                <a href="{{ route('admin.categories.delete.confirmed', $category->id) }}" type="button" class="btn btn-success">Yes</a>
-                <a href="{{ route('admin.categories.index', $category->id) }}" type="button" class="btn btn-danger">No</a>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="{{ route('admin.categories.delete.confirmed', $category->id) }}" type="button" class="btn btn-success">Yes</a>
+                    <a href="{{ route('admin.categories.index', $category->id) }}" type="button" class="btn btn-danger">No</a>
+                </div>
             </div>
         </div>
     </div>

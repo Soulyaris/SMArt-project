@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageRequest;
+use App\Models\CategoryModel as Category;
 use Illuminate\Http\Request;
 use App\Models\ImageModel as Image;
 use App\Models\RatingModel as Rating;
@@ -26,18 +27,21 @@ class ImageModelController extends Controller
         if ($image->isActive || (Auth::user() && Auth::user()->isAdmin)):
             ($image->views) ? $image->views++ : $image->views = 1;
             $image->save();
-            if (Auth::user() && Auth::user()->isAdmin):
-                $comments = Comment::leftjoin(DB::raw('(SELECT "id" AS "userid", "name" AS "username" FROM "users") AS "user"'), 'comments.user', '=', 'user.userid')->where('image', $image->id)->orderBy('comments.id', 'asc')->paginate(50);
-            else:
-                $comments = Comment::leftjoin(DB::raw('(SELECT "id" AS "userid", "name" AS "username" FROM "users") AS "user"'), 'comments.user', '=', 'user.userid')->where('image', $image->id)->where('isActive', true)->orderBy('comments.id', 'asc')->paginate(50);
-            endif;
+
+            $category = Category::where('id', $image->category)->get()[0];
+
+            $adminCheck = (!(Auth::user() && Auth::user()->isAdmin));
+            $comments = Comment::leftjoin(DB::raw('(SELECT "id" AS "userid", "name" AS "username" FROM "users") AS "user"'), 'comments.user', '=', 'user.userid')->where('image', $image->id)->when($adminCheck, function ($query, $adminCheck) {
+                    return $query->where('isActive', true);
+            })->orderBy('comments.id', 'asc')->paginate(50);
+
             $rated = 'cannot-rate';
             if (Auth::user()):
                 $rating = Rating::where('image', $image->id)->where('user', Auth::user()->id)->get();
                 $rated = $rating->isEmpty() ? 'not-rated' : $rating[0]->rating;
             endif;
             //$image->link = Storage::disk('s3')->get($image->link);
-            return view('images.show', ['user' => $user, 'image' => $image, 'rated' => $rated, 'rating' => ['rating' => $image->rating, 'rating-count' => $image->rating_count], 'comments' => $comments]);
+            return view('images.show', ['user' => $user, 'image' => $image, 'rated' => $rated, 'rating' => ['rating' => $image->rating, 'rating-count' => $image->rating_count], 'comments' => $comments, 'category' => $category->name]);
         else:
             return redirect()->route('users.show', $user->id);
         endif;
@@ -57,7 +61,6 @@ class ImageModelController extends Controller
         if ($request->file('image')):
             $link = $request->file('image');
             $path = $this->storeImage($userId, $link);
-            //Storage::disk('s3')->setVisibility($path, 'public');
             $image->link = $path;
         endif;
         $image->user = $userId;
@@ -83,7 +86,7 @@ class ImageModelController extends Controller
         $id = request()->route('image');
         $image = Image::find($id);
         $validatedData = $request->validate([
-            'name' => 'required|min:2|max:120',
+            'name' => 'required|string|min:2|max:120',
         ]);
         $image->name = $request->get('name');
         if ($request->get('isActive') != null):

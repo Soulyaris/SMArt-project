@@ -10,7 +10,7 @@ class GalleryController extends Controller
     public function index(Request $request) {
 
         $validatedData = $request->validate([
-            'name' => 'string|min:1',
+            'name' => 'string|min:2|max:120',
         ]);
 
 

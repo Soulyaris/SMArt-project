@@ -13,10 +13,17 @@
                     <form class="form-inline mt-2 mt-md-0 card-body pt-0 pb-0" method="POST" action="{{ route('users.index') }}">
                     <div class="input-group w-100 mb-3">
                         @csrf
-                        <input type="text" class="form-control" placeholder="Username" name="username" id="username" aria-label="Username" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control @error('username') is-invalid @enderror" placeholder="Username" name="username" id="username" aria-label="Username" aria-describedby="basic-addon2">
+
                         <div class="input-group-append">
                           <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
+
+                        @error('username')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                 </form>
                 <div class="card-body">
@@ -32,7 +39,7 @@
                                 @endif
                             @endif
                             <div class="col mb-4">
-                                @if ($user->isActive == false && Auth::user()->isAdmin)
+                                @if ($user->isActive == false)
                                     <div class="card text-white bg-dark h-100">
                                 @else
                                     <div class="card h-100">

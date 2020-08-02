@@ -33,13 +33,19 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->isMethod('post') && $request->username != ""):
-            $username = $request->username;
-            $users = User::where('name', 'ILIKE', '%'.$username.'%')->orderBy('name', 'asc')->paginate(15);
-            //return view('users.test', ['output' => $request->username]);
-        else:
-            $users = User::orderBy('name', 'asc')->paginate(15);
-        endif;
+        $validatedData = $request->validate([
+            'username' => 'string|min:2|max:120',
+        ]);
+        $adminCheck = (!(Auth::user() && Auth::user()->isAdmin));
+
+        $users = User::when($request, function ($query, $request) {
+            if ($request->isMethod('post')):
+                return $query->where('name', 'ILIKE', '%'.$request->username.'%');
+            endif;
+        })->when($adminCheck, function ($query, $adminCheck) {
+            return $query->where('isActive', true);
+        })->orderBy('name', 'asc')->paginate(15);
+
         return view('users.index', ['users' => $users]);
     }
 
@@ -51,12 +57,16 @@ class UserController extends Controller
      */
     public function show(User $user, Request $request)
     {
-        if (Auth::user() && Auth::user()->isAdmin):
-            $images = DB::table('images')->where('user', '=', $user->id)->orderBy('id', 'asc')->paginate(15);
+        $adminCheck = (!(Auth::user() && Auth::user()->isAdmin));
+        if ($user->isActive || !$adminCheck):
+            $images = DB::table('images')->where('user', '=', $user->id)->when($adminCheck, function ($query, $adminCheck) {
+                return $query->where('isActive', true);
+            })->orderBy('id', 'desc')->paginate(15);
+
+            return view('users.show', ['images' => $images, 'user' => $user]);
         else:
-            $images = DB::table('images')->where('user', '=', $user->id)->where('isActive', true)->orderBy('id', 'asc')->paginate(15);
+            return redirect()->route('users.index');
         endif;
-        return view('users.show', ['images' => $images, 'user' => $user]);
     }
 
     /**

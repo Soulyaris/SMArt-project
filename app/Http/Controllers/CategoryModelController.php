@@ -37,7 +37,7 @@ class CategoryModelController extends Controller
         $id = request()->route('category');
         $category = Category::find($id);
         $validatedData = $request->validate([
-            'name' => 'required|unique:categories,name,'.$id.'|min:2|max:30',
+            'name' => 'required|string|unique:categories,name,'.$id.'|min:2|max:30',
         ]);
 
         if ($request->get('name') != ""):
@@ -71,7 +71,7 @@ class CategoryModelController extends Controller
     public function create(Request $request) {
 
         $validatedData = $request->validate([
-            'name' => 'required|unique:categories,name|min:2|max:30',
+            'name' => 'required|string|unique:categories,name|min:2|max:30',
         ]);
 
         $category = new Category;

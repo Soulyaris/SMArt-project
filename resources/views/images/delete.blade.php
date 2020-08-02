@@ -10,8 +10,10 @@
         <div class="col-xl">
             <div class="card">
                 <div class="card-header">You want to delete image: <b>{{ $image->name }}</b>?</div>
-                <a href="{{ route('image.delete.confirmed', [$image->user, $image->id]) }}" type="button" class="btn btn-success">Yes</a>
-                <a href="{{ route('image.show', [$image->user, $image->id]) }}" type="button" class="btn btn-danger">No</a>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="{{ route('image.delete.confirmed', [$image->user, $image->id]) }}" type="button" class="btn btn-success">Yes</a>
+                    <a href="{{ route('image.show', [$image->user, $image->id]) }}" type="button" class="btn btn-danger">No</a>
+                </div>
             </div>
         </div>
     </div>
