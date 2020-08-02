@@ -12,7 +12,7 @@
                 <div class="card-header">You want to delete image: <b>{{ $image->name }}</b>?</div>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="{{ route('image.delete.confirmed', [$image->user, $image->id]) }}" type="button" class="btn btn-success">Yes</a>
-                    <a href="{{ route('image.show', [$image->user, $image->id]) }}" type="button" class="btn btn-danger">No</a>
+                    <a href="{{ url()->previous() }}" type="button" class="btn btn-danger">No</a>
                 </div>
             </div>
         </div>
