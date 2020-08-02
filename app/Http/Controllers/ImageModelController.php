@@ -101,7 +101,7 @@ class ImageModelController extends Controller
     }
 
     public function delete(User $user, Image $image) {
-        if (Gate::allows('delete-user', $user)):
+        if (Gate::allows('delete-image', $user)):
             return view('images.delete', ['image' => $image]);
         else:
             return redirect()->route('image.show', [$user, $image]);
@@ -110,7 +110,8 @@ class ImageModelController extends Controller
 
     public function deleteConfirmed(User $user,Image $image) {
 
-        $image->update(array('isActive' => false));
+        $image->isActive = false;
+        $image->save();
         return redirect()->route('users.show', $image->user);
     }
 }

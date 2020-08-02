@@ -59,7 +59,8 @@ class CategoryModelController extends Controller
 
     public function deleteConfirmed(Category $category) {
 
-        $category->update(array('isActive' => false));
+        $category->isActive = false;
+        $category->save();
         return redirect()->route('admin.categories.index');
     }
 

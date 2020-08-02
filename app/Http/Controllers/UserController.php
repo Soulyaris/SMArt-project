@@ -93,7 +93,8 @@ class UserController extends Controller
 
     public function deleteConfirmed(User $user) {
         if (Gate::allows('delete-user', $user)):
-            $user->update(array('isActive' => false));
+            $user->isActive = false;
+            $user->save();
             return redirect()->route('users.index');
         else:
             return redirect()->route('users.show', ['user' => $user]);
