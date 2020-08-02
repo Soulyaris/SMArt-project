@@ -90,9 +90,11 @@ class ImageModelController extends Controller
         ]);
         $image->name = $request->get('name');
         if ($request->get('isActive') != null):
-            $image->isActive = true;
-        else:
-            $image->isActive = false;
+            if (Auth::user() && Auth::user()->isAdmin):
+                $image->isActive = true;
+            else:
+                $image->isActive = false;
+            endif;
         endif;
         $image->save();
         return redirect()->route('image.show', ['user' => $image->user, 'image' => $image->id]);

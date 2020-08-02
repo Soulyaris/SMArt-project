@@ -34,15 +34,15 @@
                                 <input type="checkbox" class="form-check-input" id="isActive" name="isActive" @if ($image->isActive) checked @endif>
                                 <label class="form-check-label" for="isActive">image is active</label>
                             </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Update') }}
-                                    </button>
-                                </div>
-                            </div>
                         @endif
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Update') }}
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

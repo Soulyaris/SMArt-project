@@ -39,7 +39,7 @@
             <div id="image-gallery">
                 <div class="grid-container">
                     @foreach ($images as $image)
-                        <div>
+                        <div {{ $image->isActive ? '' : 'class=bg-dark' }}>
                             <a href="{{ route('image.show', [$image->user, $image->id]) }}">
                                 <img class='grid-item grid-item-{{ $loop->index + 1 }}' src='{{ Storage::disk('s3')->url($image->link) }}' alt=''>
                                 <p>{{ $image->name }}</p>
