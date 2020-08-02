@@ -18,6 +18,9 @@ Route::match(array('GET', 'POST'),'/', 'GalleryController@index')->name('gallery
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
 
 Route::match(array('GET', 'POST'), '/users', 'UserController@index');
 Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
