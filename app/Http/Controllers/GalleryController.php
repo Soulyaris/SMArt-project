@@ -41,7 +41,7 @@ class GalleryController extends Controller
             if ($requestCategory):
                 return $query->where('category', $requestCategory);
             endif;
-        })->orderBy('created_at', $request->sortmethod ? "desc" : "asc")->paginate(50);
+        })->orderBy('created_at', $request->sortmethod ? "asc" : "desc")->paginate(50);
         return view('gallery', ['images' => $images, 'categories' => $categories]);
     }
 }
