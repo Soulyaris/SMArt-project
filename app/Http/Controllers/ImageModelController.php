@@ -75,11 +75,12 @@ class ImageModelController extends Controller
     }
 
     public function edit(User $user, Image $image) {
-        if (Gate::allows('update-user', $user)):
-            return view('images.edit', ['image' => $image]);
-        else:
+        if (Gate::denies('update-user', $user)):
             return redirect()->route('image.show', [$user, $image]);
         endif;
+
+        return view('images.edit', ['image' => $image]);
+
     }
 
     public function update(Request $request) {
@@ -101,14 +102,18 @@ class ImageModelController extends Controller
     }
 
     public function delete(User $user, Image $image) {
-        if (Gate::allows('delete-image', $user)):
-            return view('images.delete', ['image' => $image]);
-        else:
+        if (Gate::denies('delete-image', $user)):
             return redirect()->route('image.show', [$user, $image]);
         endif;
+
+        return view('images.delete', ['image' => $image]);
+
     }
 
     public function deleteConfirmed(User $user,Image $image) {
+        if (Gate::denies('delete-image', $user)):
+            return redirect()->route('image.show', [$user, $image]);
+        endif;
 
         $image->isActive = false;
         $image->save();

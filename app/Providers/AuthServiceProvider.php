@@ -31,6 +31,10 @@ class AuthServiceProvider extends ServiceProvider
             return ($currentUser->isAdmin || $currentUser == $user);
         });
 
+        Gate::define('update-comment', function($currentUser, $user) {
+            return ($currentUser->isAdmin || $currentUser->id == $user);
+        });
+
         Gate::define('delete-image', function($currentUser, $user) {
             return ($currentUser->isAdmin || $currentUser == $user);
         });

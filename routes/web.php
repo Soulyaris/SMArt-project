@@ -23,9 +23,9 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::match(array('GET', 'POST'), '/users', 'UserController@index');
-Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
-Route::get('/users/{user}/delete-confirmed', 'UserController@deleteConfirmed')->name('users.delete.confirmed');
-Route::post('/users/{user}/update', 'UserController@update')->name('users.update');
+Route::get('/users/{user}/delete', 'UserController@delete')->middleware('admin')->name('users.delete');
+Route::get('/users/{user}/delete-confirmed', 'UserController@deleteConfirmed')->middleware('admin')->name('users.delete.confirmed');
+Route::post('/users/{user}/update', 'UserController@update')->middleware('auth')->name('users.update');
 Route::resource('/users', 'UserController', ['except' => ['create', 'store', 'destroy', 'update']]);
 
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function(){

@@ -77,11 +77,12 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if (Gate::allows('update-user', $user)):
-            return view('users.edit', ['user' => $user]);
-        else:
+        if (Gate::denies('update-user', $user)):
             return redirect()->route('users.show', ['user' => $user]);
         endif;
+
+        return view('users.edit', ['user' => $user]);
+
     }
 
     /**
@@ -92,21 +93,21 @@ class UserController extends Controller
      */
 
     public function deleteConfirmed(User $user) {
-        if (Gate::allows('delete-user', $user)):
-            $user->isActive = false;
-            $user->save();
-            return redirect()->route('users.index');
-        else:
+        if (Gate::denies('delete-user', $user)):
             return redirect()->route('users.show', ['user' => $user]);
         endif;
+
+        $user->isActive = false;
+        $user->save();
+        return redirect()->route('users.index');
     }
 
     public function delete(User $user) {
-        if (Gate::allows('delete-user', $user)):
-            return view('users.delete', ['user' => $user]);
-        else:
+        if (Gate::denies('delete-user', $user)):
             return redirect()->route('users.show', ['user' => $user]);
         endif;
+
+        return view('users.delete', ['user' => $user]);
     }
 
     public function update(UserRequest $request) {

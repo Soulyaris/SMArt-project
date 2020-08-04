@@ -6,6 +6,7 @@ use App\Models\ImageModel as Image;
 use App\Models\CommentModel as Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\CommentRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
 class CommentModelController extends Controller
@@ -23,6 +24,10 @@ class CommentModelController extends Controller
     }
 
     public function edit(Comment $comment) {
+        if (Gate::denies('update-comment', $comment->user)):
+            return redirect()->route('gallery');
+        endif;
+
         return view('images.editcomment', ['comment' => $comment]);
     }
 
@@ -36,15 +41,25 @@ class CommentModelController extends Controller
     }
 
     public function delete(Comment $comment) {
+        if (Gate::denies('update-comment', $comment->user)):
+            return redirect()->route('gallery');
+        endif;
+
         $image = Image::where('id', $comment->image)->get()[0];
         return view('images.deletecomment', ['comment' => $comment, 'image' => $image]);
+
     }
 
     public function deleteConfirmed(Comment $comment) {
+        if (Gate::denies('update-comment', $comment->user)):
+            return redirect()->route('gallery');
+        endif;
+
         $image = Image::where('id', $comment->image)->get()[0];
         $comment->isActive = false;
         $comment->save();
 
         return redirect()->route('image.show',[$image->user, $image->id]);
+
     }
 }
