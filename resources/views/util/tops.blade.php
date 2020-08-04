@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="container">
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header text-light bg-dark">
             Most productive users:
         </div>
@@ -31,7 +31,7 @@
             </table>
           </div>
     </div>
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header text-light bg-dark">
             Top viewed users:
         </div>

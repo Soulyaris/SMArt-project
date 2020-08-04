@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('page-title')
-    SMArt image creation
+    SMArt image
 @endsection
 
 @section('content')
@@ -39,7 +39,9 @@
                 @endif
             </div>
         </div>
-        <img src="{{ Storage::disk('s3')->url($image->link) }}" class="img-fluid fit-height" alt="{{ $image->name }}">
+        <a id="showModal">
+            <img src="{{ Storage::disk('s3')->url($image->link) }}" class="img-fluid fit-height" alt="{{ $image->name }}">
+        </a>
         @if (Auth::user())
             @if (Auth::user()->id == $user->id || Auth::user()->isAdmin)
                 <div class="image-control">
@@ -49,6 +51,14 @@
             @endif
         @endif
     </div>
+
+    <div id="modalImage">
+        <div class="modal-content">
+            <button id="closeModal" class="close-modal">&times;</button>
+            <img src="{{ Storage::disk('s3')->url($image->link) }}" class="img-fluid modal-image" alt="{{ $image->name }}">
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">
           Comments
@@ -101,6 +111,16 @@
 <script>
     window.addEventListener("load", function(event) {
 
+        $( '#showModal' ).on('click', function (e) {
+            e.preventDefault;
+            $( '#modalImage' ).addClass('active');
+        });
+
+        $( '#closeModal' ).on('click', function (e) {
+            e.preventDefault;
+            $( '#modalImage' ).removeClass('active');
+        });
+
         var form = $( '.image-rating-form' ).first();
 
         form.submit(function (e) {
@@ -115,8 +135,14 @@
                 url: form.attr('action'),
                 data: form.serialize(),
                 success: function(data){
-                    console.log(data);
-                    $( '#image-info-container' ).html( data );
+                    if (data === 'error') {
+                        $( '.image-rating-form' ).first().append("<div class='alert alert-danger p-1 ml-1' role='alert' style='display: inline-block'>Error ocured</div>");
+                        setTimeout(function(){
+                            $('.alert-danger').remove();
+                        }, 1800);
+                    } else {
+                        $( '#image-info-container' ).html( data );
+                    };
                 }
             })
         });
