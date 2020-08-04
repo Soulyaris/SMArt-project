@@ -23,9 +23,9 @@ class RatingModelController extends Controller
         $output = '<p class="card-text"><small class="text-muted">Viewed '.$image->views.' times, rated '.$image->rating_count.' times, rating: '.$image->rating.'</small><div class="image-rating">';
         for ($i = 0; $i < 5; $i++):
             if ($i < $request->rating):
-                $output .= '<div class="rating-star-rated active"></div>';
+                $output .= '<div class="rating-star-rated active"></div> ';
             else:
-                $output .= '<div class="rating-star-rated"></div>';
+                $output .= '<div class="rating-star-rated"></div> ';
             endif;
         endfor;
         $output .= '</div>';
