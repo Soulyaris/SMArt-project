@@ -1,5 +1,5 @@
 <h1>SMArt (Self-Made Art)</h1>
-[Link to heroku](http://selfmadeart-project.herokuapp.com/)
+[Link to heroku](https://selfmadeart-project.herokuapp.com/)
 
 ## Введение
 
