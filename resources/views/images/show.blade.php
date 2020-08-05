@@ -107,7 +107,7 @@
         {{ $comments->links() }}
     </div>
 </div>
-<script src="{{ secure_asset('js/jquery.slim.min.js') }}"></script>
+<script src="{{ asset('js/jquery.slim.min.js') }}"></script>
 <script>
     window.addEventListener("load", function(event) {
 
