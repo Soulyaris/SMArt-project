@@ -23,12 +23,12 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::match(array('GET', 'POST'), '/users', 'UserController@index');
-Route::get('/users/{user}/delete', 'UserController@delete')->middleware('admin')->name('users.delete');
-Route::get('/users/{user}/delete-confirmed', 'UserController@deleteConfirmed')->middleware('admin')->name('users.delete.confirmed');
-Route::post('/users/{user}/update', 'UserController@update')->middleware('auth')->name('users.update');
-Route::resource('/users', 'UserController', ['except' => ['create', 'store', 'destroy', 'update']]);
+Route::get('/users/{user}/delete', 'UserController@delete')->middleware(['admin', 'banned'])->name('users.delete');
+Route::get('/users/{user}/delete-confirmed', 'UserController@deleteConfirmed')->middleware(['admin', 'banned'])->name('users.delete.confirmed');
+Route::post('/users/{user}/update', 'UserController@update')->middleware(['auth', 'banned'])->name('users.update');
+Route::middleware('banned')->resource('/users', 'UserController', ['except' => ['create', 'store', 'destroy', 'update']]);
 
-Route::prefix('admin')->name('admin.')->middleware('admin')->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['admin', 'banned'])->group(function(){
     Route::prefix('categories')->name('categories.')->group(function(){
         Route::get('/', 'CategoryModelController@index')->name('index');
         Route::get('/add', 'CategoryModelController@add')->name('add');
@@ -40,7 +40,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function(){
     });
 });
 
-Route::prefix('image')->name('image.')->middleware('auth')->group(function(){
+Route::prefix('image')->name('image.')->middleware(['auth', 'banned'])->group(function(){
     Route::get('/{user}/show/{image}','ImageModelController@show')->withoutMiddleware('auth')->name('show');
     Route::get('/add', 'ImageModelController@add')->name('add');
     Route::post('/create', 'ImageModelController@create')->name('create');
@@ -51,7 +51,7 @@ Route::prefix('image')->name('image.')->middleware('auth')->group(function(){
     Route::post('/{image}/rate', 'RatingModelController@rate')->name('rate');
 });
 
-Route::prefix('comment')->name('comment.')->middleware('auth')->group(function(){
+Route::prefix('comment')->name('comment.')->middleware(['auth', 'banned'])->group(function(){
     Route::post('/{image}/create', 'CommentModelController@create')->name('create');
     Route::get('/{comment}/edit','CommentModelController@edit')->name('edit');
     Route::post('/{comment}/update','CommentModelController@update')->name('update');

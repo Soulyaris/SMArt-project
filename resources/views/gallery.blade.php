@@ -90,6 +90,11 @@
                 galleryFilter.toggleClass('active');
             });
 
+            if (!! $( '#warning-message')) {
+                setTimeout(function(){
+                    $('#warning-message').remove();
+                }, 1800);
+            };
         });
     </script>
 @endsection

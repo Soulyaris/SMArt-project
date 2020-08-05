@@ -68,3 +68,9 @@
     </nav>
 </header>
 
+@if (session('warning'))
+    <div id="warning-message" class="alert alert-danger container">
+        {{ session('warning') }}
+    </div>
+@endif
+
