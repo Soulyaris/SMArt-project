@@ -63,6 +63,11 @@
                     </div>
                 </div>
             </form>
+
+            @if(!$images->isNotEmpty())
+                <h5 class="text-center text-secondary p-5">No images found</h5>
+            @endif
+
             <div id="image-gallery">
                 <div class="grid-container">
                     @foreach ($images as $image)

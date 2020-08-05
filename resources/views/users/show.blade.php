@@ -36,6 +36,9 @@
         </div>
         <div class="card">
             <h5 class="card-header mb-3">Images</h5>
+            @if(!$images->isNotEmpty())
+                <h5 class="text-center text-secondary p-5">No images found</h5>
+            @endif
             <div id="image-gallery">
                 <div class="grid-container">
                     @foreach ($images as $image)
