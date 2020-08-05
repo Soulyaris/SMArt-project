@@ -17,10 +17,14 @@ class CommentModelController extends Controller
             $comment->image = $image->id;
             $comment->user = Auth::user()->id;
             $comment->comment_text = $request->comment;
-            $comment->save();
+            $saved = $comment->save();
         }
 
-        return redirect()->route('image.show',[$image->user, $image->id]);
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while creating the comment');
+        endif;
+
+        return redirect()->route('image.show',[$image->user, $image->id])->with('success', 'Comment created successfully');
     }
 
     public function edit(Comment $comment) {
@@ -34,10 +38,22 @@ class CommentModelController extends Controller
     public function update(Comment $comment, CommentRequest $request) {
         if ($request->comment) {
             $comment->comment_text = $request->comment;
-            $comment->save();
         }
+
+        if ($request->get('isActive') != null):
+            $comment->isActive = true;
+        else:
+            $comment->isActive = false;
+        endif;
+
+        $saved = $comment->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while updating the comment');
+        endif;
+
         $image = Image::where('id', $comment->image)->get()[0];
-        return redirect()->route('image.show',[$image->user, $image->id]);
+        return redirect()->route('image.show',[$image->user, $image->id])->with('success', 'Comment updated successfully');
     }
 
     public function delete(Comment $comment) {
@@ -57,9 +73,12 @@ class CommentModelController extends Controller
 
         $image = Image::where('id', $comment->image)->get()[0];
         $comment->isActive = false;
-        $comment->save();
+        $saved = $comment->save();
 
-        return redirect()->route('image.show',[$image->user, $image->id]);
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while deleting the comment');
+        endif;
 
+        return redirect()->route('image.show',[$image->user, $image->id])->with('success', 'Comment deleted successfully');
     }
 }

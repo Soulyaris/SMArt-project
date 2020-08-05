@@ -20,19 +20,19 @@ class RatingModelController extends Controller
         $image->rating_count = $image->rating_count ? $image->rating_count + 1 : 1;
         $saved = $image->save();
 
-        if ($saved):
-            $output = '<p class="card-text"><small class="text-muted">Viewed '.$image->views.' times, rated '.$image->rating_count.' times, rating: '.$image->rating.'</small><div class="image-rating">';
-            for ($i = 0; $i < 5; $i++):
-                if ($i < $request->rating):
-                    $output .= '<div class="rating-star-rated active"></div> ';
-                else:
-                    $output .= '<div class="rating-star-rated"></div> ';
-                endif;
-            endfor;
-            $output .= '</div>';
-            echo $output;
-        else:
+        if (!($saved)):
             echo "error";
         endif;
+
+        $output = '<p class="card-text"><small class="text-muted">Viewed '.$image->views.' times, rated '.$image->rating_count.' times, rating: '.$image->rating.'</small><div class="image-rating">';
+        for ($i = 0; $i < 5; $i++):
+            if ($i < $request->rating):
+                $output .= '<div class="rating-star-rated active"></div> ';
+            else:
+                $output .= '<div class="rating-star-rated"></div> ';
+            endif;
+        endfor;
+        $output .= '</div>';
+        echo $output;
     }
 }

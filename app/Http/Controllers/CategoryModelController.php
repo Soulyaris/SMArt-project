@@ -48,8 +48,14 @@ class CategoryModelController extends Controller
         else:
             $category->isActive = false;
         endif;
-        $category->save();
-        return redirect()->route('admin.categories.index');
+
+        $saved = $category->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while updating the category');
+        endif;
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully');
     }
 
     public function delete(Category $category) {
@@ -60,8 +66,13 @@ class CategoryModelController extends Controller
     public function deleteConfirmed(Category $category) {
 
         $category->isActive = false;
-        $category->save();
-        return redirect()->route('admin.categories.index');
+        $saved = $category->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while deleting the category');
+        endif;
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully');
     }
 
     public function add() {
@@ -77,8 +88,12 @@ class CategoryModelController extends Controller
 
         $category = new Category;
         $category->name = $request->get('name');
-        $category->save();
+        $saved = $category->save();
 
-        return redirect()->route('admin.categories.index');
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while creating the category');
+        endif;
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully');
     }
 }

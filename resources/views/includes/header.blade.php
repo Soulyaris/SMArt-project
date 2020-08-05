@@ -74,3 +74,20 @@
     </div>
 @endif
 
+@if (session('success'))
+    <div id="warning-message" class="alert alert-success container">
+        {{ session('success') }}
+    </div>
+@endif
+
+<script>
+    window.addEventListener("load", function(event) {
+
+        if (!! $( '#warning-message')) {
+            setTimeout(function(){
+                $('#warning-message').remove();
+            }, 2500);
+        };
+
+    });
+</script>

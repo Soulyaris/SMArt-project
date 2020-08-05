@@ -98,7 +98,12 @@ class UserController extends Controller
         endif;
 
         $user->isActive = false;
-        $user->save();
+        $saved = $user->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while deleting the user');
+        endif;
+
         return redirect()->route('users.index');
     }
 
@@ -141,7 +146,12 @@ class UserController extends Controller
                 $user->isAdmin = false;
             endif;
         endif;
-        $user->save();
+        $saved = $user->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while updating the user');
+        endif;
+
         return redirect()->route('users.show', ['user' => $user]);
     }
 }

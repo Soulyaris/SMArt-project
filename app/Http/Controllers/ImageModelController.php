@@ -67,11 +67,15 @@ class ImageModelController extends Controller
         if ($request->get('category')):
             $image->category = $request->get('category');
         endif;
-        $image->save();
+        $saved = $image->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while uploading the image');
+        endif;
 
         $newImage = Image::where('link', '=', $path)->get();
 
-        return redirect()->route('image.show', ['user' => $userId, 'image' => $image->id]);
+        return redirect()->route('image.show', ['user' => $userId, 'image' => $image->id])->with('success', 'Image created successfully');
     }
 
     public function edit(User $user, Image $image) {
@@ -97,8 +101,13 @@ class ImageModelController extends Controller
                 $image->isActive = false;
             endif;
         endif;
-        $image->save();
-        return redirect()->route('image.show', ['user' => $image->user, 'image' => $image->id]);
+        $saved = $image->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while updating the image');
+        endif;
+
+        return redirect()->route('image.show', ['user' => $image->user, 'image' => $image->id])->with('success', 'Image updated successfully');
     }
 
     public function delete(User $user, Image $image) {
@@ -116,7 +125,12 @@ class ImageModelController extends Controller
         endif;
 
         $image->isActive = false;
-        $image->save();
-        return redirect()->route('users.show', $image->user);
+        $saved = $image->save();
+
+        if (!($saved)):
+            return redirect()->route('gallery')->with('warning', 'Error occured while deleting the image');
+        endif;
+
+        return redirect()->route('users.show', $image->user)->with('success', 'Image deleted successfully');
     }
 }

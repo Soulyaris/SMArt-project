@@ -27,6 +27,13 @@
                             </div>
                         </div>
 
+                        @if (Auth::user()->isAdmin)
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="isActive" name="isActive" @if ($comment->isActive) checked @endif>
+                                <label class="form-check-label" for="isActive">comment is active</label>
+                            </div>
+                        @endif
+
                         <div class="form-group">
                             <div>
                                 <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>

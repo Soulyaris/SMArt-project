@@ -93,7 +93,7 @@
             if (!! $( '#warning-message')) {
                 setTimeout(function(){
                     $('#warning-message').remove();
-                }, 1800);
+                }, 2500);
             };
         });
     </script>
