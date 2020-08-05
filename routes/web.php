@@ -1,7 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
+if (App::environment('production')):
+    URL::forseScheme('https');
+endif;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
