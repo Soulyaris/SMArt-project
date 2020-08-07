@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
     {
         $userInfo = $this->user;
         return [
-            'name' => 'nullable|string|unique:users,name,'.$userInfo.'|min:3|max:60',
+            'name' => 'nullable|string|unique:users,name,'.$userInfo.'|min:2|max:60',
             'email' => 'nullable|email|unique:users,email,'.$userInfo,
             'password' => 'nullable|string|confirmed|min:6|max:32',
             'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'

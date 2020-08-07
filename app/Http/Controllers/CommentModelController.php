@@ -40,10 +40,12 @@ class CommentModelController extends Controller
             $comment->comment_text = $request->comment;
         }
 
-        if ($request->get('isActive') != null):
-            $comment->isActive = true;
-        else:
-            $comment->isActive = false;
+        if (Auth::user() && Auth::user()->isAdmin):
+            if ($request->get('isActive') != null):
+                $comment->isActive = true;
+            else:
+                $comment->isActive = false;
+            endif;
         endif;
 
         $saved = $comment->save();

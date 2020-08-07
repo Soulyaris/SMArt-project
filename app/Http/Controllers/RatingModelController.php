@@ -14,7 +14,11 @@ class RatingModelController extends Controller
         $rating->user = Auth::user()->id;
         $rating->image = $image->id;
         $rating->rating = $request->rating;
-        $rating->save();
+        $saved = $rating->save();
+
+        if (!($saved)):
+            echo "error";
+        endif;
 
         $image->rating = $image->rating ? $image->rating + $request->rating : $request->rating;
         $image->rating_count = $image->rating_count ? $image->rating_count + 1 : 1;

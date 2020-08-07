@@ -94,8 +94,8 @@ class ImageModelController extends Controller
             'name' => 'required|string|min:2|max:120',
         ]);
         $image->name = $request->get('name');
-        if ($request->get('isActive') != null):
-            if (Auth::user() && Auth::user()->isAdmin):
+        if (Auth::user()->isAdmin):
+            if ($request->get('isActive') != null):
                 $image->isActive = true;
             else:
                 $image->isActive = false;
