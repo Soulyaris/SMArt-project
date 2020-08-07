@@ -121,6 +121,12 @@
             $( '#modalImage' ).removeClass('active');
         });
 
+        $( '#modalImage' ).on('click', function (e) {
+            e.preventDefault;
+            $( this ).removeClass('active');
+        });
+
+
         var form = $( '.image-rating-form' ).first();
 
         form.submit(function (e) {
