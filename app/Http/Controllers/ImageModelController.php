@@ -33,7 +33,7 @@ class ImageModelController extends Controller
             $adminCheck = (!(Auth::user() && Auth::user()->isAdmin));
             $comments = Comment::leftjoin(DB::raw('(SELECT "id" AS "userid", "name" AS "username" FROM "users") AS "user"'), 'comments.user', '=', 'user.userid')->where('image', $image->id)->when($adminCheck, function ($query, $adminCheck) {
                     return $query->where('isActive', true);
-            })->orderBy('comments.id', 'asc')->paginate(50);
+            })->orderBy('comments.id', 'desc')->paginate(50);
 
             $rated = 'cannot-rate';
             if (Auth::user()):
